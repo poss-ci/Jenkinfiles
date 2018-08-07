@@ -34,7 +34,7 @@ def runStages(label) {
     }
     stage('Test ' + label) {
         try {
-            sh "/opt/maven/bin/mvn clean install -fn"
+            sh "mvn clean install -fn"
         } finally {
             junit '**/target/surefire-reports/TEST-*.xml'
             archive '**/target/*.jar'
