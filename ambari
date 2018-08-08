@@ -30,7 +30,7 @@ def runStages(label) {
         
         sh ''' 
             uname -a && lsb_release -a
-            git clean -fxd"
+            git clean -fxd
             mvn clean
             mkdir -p /var/lib/jenkins/workspace/ambari/ambari-metrics/ambari-metrics-timelineservice/target/embedded/
             cp /var/lib/jenkins/.m2/repository/patches/ambari/hbase-2.0.0.3.0.0.0-1578-bin.tar.gz /var/lib/jenkins/workspace/ambari/ambari-metrics/ambari-metrics-timelineservice/target/embedded/hbase.tar.gz
