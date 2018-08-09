@@ -33,10 +33,10 @@ def runStages(label) {
             git clean -fxd
             mvn clean
             mkdir -p /var/lib/jenkins/workspace/ambari/ambari-metrics/ambari-metrics-timelineservice/target/embedded/
-            cp /var/lib/jenkins/.m2/repository/patches/ambari/hbase-2.0.0.3.0.0.0-1578-bin.tar.gz /var/lib/jenkins/workspace/ambari/ambari-metrics/ambari-metrics-timelineservice/target/embedded/hbase.tar.gz
-            cp /var/lib/jenkins/.m2/repository/patches/ambari/phoenix-5.0.0.3.0.0.0-1578.tar.gz /var/lib/jenkins/workspace/ambari/ambari-metrics/ambari-metrics-timelineservice/target/embedded/phoenix.tar.gz
+            cp /var/lib/jenkins/.m2/repository/patches/ambari/hbase-2.0.0.3.0.0.0-1634-bin.tar.gz /var/lib/jenkins/workspace/ambari/ambari-metrics/ambari-metrics-timelineservice/target/embedded/hbase.tar.gz
+            cp /var/lib/jenkins/.m2/repository/patches/ambari/phoenix-5.0.0.3.0.0.0-1634.tar.gz /var/lib/jenkins/workspace/ambari/ambari-metrics/ambari-metrics-timelineservice/target/embedded/phoenix.tar.gz
             mkdir -p /var/lib/jenkins/workspace/ambari/ambari-metrics/ambari-metrics-assembly/target/embedded
-            cp /var/lib/jenkins/.m2/repository/patches/ambari/hadoop-3.1.0.3.0.0.0-1578.tar.gz /var/lib/jenkins/workspace/ambari/ambari-metrics/ambari-metrics-assembly/target/embedded/hadoop.tar.gz
+            cp /var/lib/jenkins/.m2/repository/patches/ambari/hadoop-3.1.0.3.0.0.0-1634.tar.gz /var/lib/jenkins/workspace/ambari/ambari-metrics/ambari-metrics-assembly/target/embedded/hadoop.tar.gz
             mvn install -DskipTests
         '''
     }
