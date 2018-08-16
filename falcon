@@ -34,11 +34,13 @@ def runStages(label) {
         sh "mvn clean install -DskipTests"
     }
     stage('Test ' + label) {
-        try {
-            sh "mvn test -fn"
-        } finally {
-            junit '**/target/surefire-reports/TEST-*.xml'
-            archive '**/target/*.jar'
+        timeout(120) {
+            try {
+                sh "mvn test -fn"
+            } finally {
+                junit '**/target/surefire-reports/TEST-*.xml'
+                archive '**/target/*.jar'
+            }
         }
     }
 }
