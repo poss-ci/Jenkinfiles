@@ -28,7 +28,7 @@ for (x in labels) {
 def runStages(label) {
     stage('Compile ' + label) {
         sh "uname -a && lsb_release -a"
-        git branch: 'trunk', url: 'https://github.com/apache/kafka.git'
+        git branch: 'trunk', url: 'https://github.com/apache/datafu.git'
         sh "git clean -fxd"
         // bootstrap and download the wrapper
         sh "gradle"
