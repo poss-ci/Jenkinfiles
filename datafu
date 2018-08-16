@@ -1,0 +1,50 @@
+properties([parameters([text(defaultValue: '''x86ub16
+x86ub18
+x86rh7
+x86rh75
+ppcub16
+ppcub18
+ppcrh7
+ppcrh75''', description: '', name: 'nodelabels')]), pipelineTriggers([cron('''TZ=Asia/Kolkata
+H 0 * * 1''')]), buildDiscarder(logRotator(artifactDaysToKeepStr: '', artifactNumToKeepStr: '', daysToKeepStr: '30', numToKeepStr: '15')),])
+
+def labels = nodelabels.split("\\r?\\n")
+def builders = [:]
+for (x in labels) {
+    def label = x
+    builders[label] = {
+        node(label) {
+            sh "hostname -f"
+            if (label.contains('host')) {
+                runStages(label)
+            } else {
+                docker.image(label+':v3').inside("-v /var/lib/jenkins/.m2/repository:/var/lib/jenkins/.m2/repository:rw,z -v /var/lib/jenkins/.cache:/var/lib/jenkins/.cache:rw,z -v /var/lib/jenkins/.gradle:/var/lib/jenkins/.gradle:rw,z") {
+                    runStages(label)
+                }
+            }
+        }
+    }
+}
+def runStages(label) {
+    stage('Compile ' + label) {
+        sh "uname -a && lsb_release -a"
+        git branch: 'trunk', url: 'https://github.com/apache/kafka.git'
+        sh "git clean -fxd"
+        // bootstrap and download the wrapper
+        sh "gradle"
+        // All the JARs for the project can be built with the following command
+        sh "./gradlew clean assemble"
+    }
+    stage('Test ' + label) {
+        try {
+            // Tests can be run with the following command
+            sh "./gradlew test"
+        } catch (Exception err) {
+            currentBuild.result = 'UNSTABLE'
+        } finally {
+            junit '**/build/test-results/test/*.xml'
+            archive '**/build/libs/*.jar'
+        }
+    }
+}
+parallel builders
