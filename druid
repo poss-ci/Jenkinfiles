@@ -1,0 +1,46 @@
+properties([parameters([text(defaultValue: '''x86ub16
+x86ub18
+x86rh7
+x86rh75
+ppcub16
+ppcub18
+ppcrh7
+ppcrh75''', description: '', name: 'nodelabels')]), pipelineTriggers([cron('''TZ=Asia/Kolkata
+H 8 * * 3''')]), buildDiscarder(logRotator(artifactDaysToKeepStr: '', artifactNumToKeepStr: '', daysToKeepStr: '30', numToKeepStr: '15')),])
+
+def labels = nodelabels.split("\\r?\\n")
+def builders = [:]
+for (x in labels) {
+    def label = x
+    builders[label] = {
+        node(label) {
+            sh "hostname -f"
+            if (label.contains('host')) {
+                runStages(label)
+            } else {
+                docker.image(label+':v3').inside("-v /var/lib/jenkins/.m2/repository:/var/lib/jenkins/.m2/repository:rw,z") {
+                    runStages(label)
+                }
+            }
+        }
+    }
+}
+def runStages(label) {
+    stage('Compile ' + label) {
+        sh "uname -a && lsb_release -a"
+        git branch: 'master', url: 'https://github.com/apache/incubator-druid.git'
+        sh "git clean -fxd"
+        sh "mvn clean install -DskipTests"
+    }
+    stage('Test ' + label) {
+        timeout(120) {
+            try {
+                sh "mvn test -fn"
+            } finally {
+                junit '**/target/surefire-reports/TEST-*.xml'
+                archive '**/target/*.jar'
+            }
+        }
+    }
+}
+parallel builders
