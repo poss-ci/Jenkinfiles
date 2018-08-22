@@ -30,6 +30,7 @@ def runStages(label) {
         sh "uname -a && lsb_release -a"
         git branch: 'master', url: 'https://github.com/apache/datafu.git'
         sh "git clean -fxd"
+        sh "git apply /var/lib/jenkins/.m2/repository/patches/datafu/*"
         // bootstrap and download the wrapper
         sh "gradle"
         // All the JARs for the project can be built with the following command
