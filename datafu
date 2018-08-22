@@ -34,12 +34,12 @@ def runStages(label) {
         // bootstrap and download the wrapper
         sh "gradle"
         // All the JARs for the project can be built with the following command
-        sh "./gradlew clean assemble"
+        sh "gradle clean assemble"
     }
     stage('Test ' + label) {
         try {
             // Tests can be run with the following command
-            sh "./gradlew test"
+            sh "gradle test"
         } catch (Exception err) {
             currentBuild.result = 'UNSTABLE'
         } finally {
