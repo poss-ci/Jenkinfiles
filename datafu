@@ -32,14 +32,14 @@ def runStages(label) {
         sh "git clean -fxd"
         sh "git apply /var/lib/jenkins/.m2/repository/patches/datafu/*"
         // bootstrap and download the wrapper
-        sh "gradle"
+        sh "gradle -b bootstrap.gradle"
         // All the JARs for the project can be built with the following command
-        sh "gradle clean assemble"
+        sh "./gradlew clean assemble"
     }
     stage('Test ' + label) {
         try {
             // Tests can be run with the following command
-            sh "gradle test"
+            sh "./gradlew test"
         } catch (Exception err) {
             currentBuild.result = 'UNSTABLE'
         } finally {
