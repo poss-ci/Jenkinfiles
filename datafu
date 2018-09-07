@@ -34,7 +34,7 @@ def runStages(label) {
         // bootstrap and download the wrapper
         sh "gradle -b bootstrap.gradle"
         // All the JARs for the project can be built with the following command
-        sh "./gradlew clean assemble"
+        sh "./gradlew clean assemble -x rat"
     }
     stage('Test ' + label) {
         try {
