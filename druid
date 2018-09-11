@@ -35,7 +35,10 @@ def runStages(label) {
     stage('Test ' + label) {
         timeout(120) {
             try {
-                sh "mvn test -fn"
+                sh '''
+                    export LANG=en_US.UTF-8
+                    mvn test -fn
+                '''
             } finally {
                 junit '**/target/surefire-reports/TEST-*.xml'
                 archive '**/target/*.jar'
