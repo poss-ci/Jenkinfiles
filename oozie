@@ -37,6 +37,7 @@ def runStages(label) {
             sh '''
                 export JAVA_HOME='/usr/lib/jvm/java-1.8.0-openjdk/'
                 export LD_LIBRARY_PATH='/opt/custom/j2v8:$LD_LIBRARY_PATH'
+                export _JAVA_OPTIONS="-XX:+CMSClassUnloadingEnabled -XX:MaxPermSize=1024m"
                 mvn test -fn
             '''
         } finally {
