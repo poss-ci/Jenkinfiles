@@ -15,7 +15,6 @@ for (x in labels) {
     builders[label] = {
         node(label) {
             sh "hostname -f"
-            sh "export PATH=/var/lib/jenkins/.m2/repository/maven3.6/apache-maven-3.6.0/bin:$PATH"
             if (label.contains('host')) {
                 runStages(label)
             } else {
@@ -29,9 +28,9 @@ for (x in labels) {
 def runStages(label) {
     stage('Compile ' + label) {
         sh "uname -a && lsb_release -a"
-        sh "export PATH=/var/lib/jenkins/.m2/repository/maven3.6/apache-maven-3.6.0/bin:$PATH"
         git branch: 'master', url: 'https://github.com/apache/spark.git'
         sh '''
+            export PATH=/var/lib/jenkins/.m2/repository/maven3.6/apache-maven-3.6.0/bin:$PATH
             mvn -v
             git clean -fxd
             export _JAVA_OPTIONS='-XX:+UseConcMarkSweepGC'
@@ -41,6 +40,7 @@ def runStages(label) {
     stage('Test ' + label) {
         try {
             sh '''
+                export PATH=/var/lib/jenkins/.m2/repository/maven3.6/apache-maven-3.6.0/bin:$PATH
                 export MAVEN_OPTS='-Xmx5g -Xms128m -XX:MaxPermSize=512m'
                 export _JAVA_OPTIONS='-XX:+UseConcMarkSweepGC'
                 export JAVA_TOOL_OPTIONS='-Xmx5g -XX:MaxPermSize=512m -Xms128m'
